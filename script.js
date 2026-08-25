@@ -18,13 +18,16 @@ import {
   collection,
   addDoc,
   query,
-  where,
   orderBy,
   onSnapshot,
   serverTimestamp
 } from
   "https://www.gstatic.com/firebasejs/12.18.0/firebase-firestore.js";
 
+
+// ===============================
+// FIREBASE CONFIG
+// ===============================
 
 const firebaseConfig = {
   apiKey: "AIzaSyCZEtzAmFMHgS48_eOE-3OSeR_na_gTsoQ",
@@ -36,14 +39,33 @@ const firebaseConfig = {
   measurementId: "G-T8M0LBQ9J2"
 };
 
+
+// ===============================
+// INITIALIZE FIREBASE
+// ===============================
+
 const app = initializeApp(firebaseConfig);
+
 const auth = getAuth(app);
+
 const db = getFirestore(app);
 
+
+// ===============================
+// VARIABLES
+// ===============================
+
 let currentUser = null;
+
 let currentUsername = "";
+
 let selectedUser = null;
+
 let stopMessagesListener = null;
+
+let stopUsersListener = null;
+
+let selectedUserStatusListener = null;
 
 
 // ===============================
@@ -60,16 +82,29 @@ onAuthStateChanged(auth, async (user) => {
 
     showChat();
 
+    await updateOnlineStatus();
+
     loadUsers();
 
   } else {
 
     currentUser = null;
+
     selectedUser = null;
 
     if (stopMessagesListener) {
       stopMessagesListener();
       stopMessagesListener = null;
+    }
+
+    if (stopUsersListener) {
+      stopUsersListener();
+      stopUsersListener = null;
+    }
+
+    if (selectedUserStatusListener) {
+      selectedUserStatusListener();
+      selectedUserStatusListener = null;
     }
 
     showLogin();
@@ -102,6 +137,7 @@ window.signup = async function () {
     );
 
     return;
+
   }
 
 
@@ -112,6 +148,7 @@ window.signup = async function () {
     );
 
     return;
+
   }
 
 
@@ -122,6 +159,7 @@ window.signup = async function () {
     );
 
     return;
+
   }
 
 
@@ -136,6 +174,7 @@ window.signup = async function () {
 
 
     currentUser = result.user;
+
     currentUsername = username;
 
 
@@ -144,7 +183,9 @@ window.signup = async function () {
       {
         uid: currentUser.uid,
         username: username,
-        email: email
+        email: email,
+        online: true,
+        lastSeen: serverTimestamp()
       }
     );
 
@@ -156,6 +197,7 @@ window.signup = async function () {
 
 
     showAuthMessage("");
+
 
   } catch (error) {
 
@@ -190,6 +232,7 @@ window.login = async function () {
     );
 
     return;
+
   }
 
 
@@ -207,7 +250,10 @@ window.login = async function () {
 
     await loadCurrentUser();
 
+    await updateOnlineStatus();
+
     showAuthMessage("");
+
 
   } catch (error) {
 
@@ -260,8 +306,11 @@ async function loadCurrentUser() {
       {
         uid: currentUser.uid,
         username: currentUsername,
-        email: currentUser.email
-      }
+        email: currentUser.email,
+        online: true,
+        lastSeen: serverTimestamp()
+      },
+      { merge: true }
     );
 
   }
@@ -270,6 +319,51 @@ async function loadCurrentUser() {
   localStorage.setItem(
     "myChatUsername",
     currentUsername
+  );
+
+}
+
+
+// ===============================
+// ONLINE STATUS
+// ===============================
+
+async function updateOnlineStatus() {
+
+  if (!currentUser) return;
+
+
+  await setDoc(
+    doc(db, "Users", currentUser.uid),
+    {
+      uid: currentUser.uid,
+      username: currentUsername,
+      email: currentUser.email,
+      online: true,
+      lastSeen: serverTimestamp()
+    },
+    { merge: true }
+  );
+
+}
+
+
+// ===============================
+// OFFLINE STATUS
+// ===============================
+
+async function updateOfflineStatus() {
+
+  if (!currentUser) return;
+
+
+  await setDoc(
+    doc(db, "Users", currentUser.uid),
+    {
+      online: false,
+      lastSeen: serverTimestamp()
+    },
+    { merge: true }
   );
 
 }
@@ -325,6 +419,8 @@ window.logout = async function () {
 
   try {
 
+    await updateOfflineStatus();
+
     await signOut(auth);
 
   } catch (error) {
@@ -340,16 +436,20 @@ window.logout = async function () {
 // LOAD USERS
 // ===============================
 
-async function loadUsers() {
+function loadUsers() {
 
   const usersList =
     document.getElementById("usersList");
 
+
   if (!usersList || !currentUser) return;
 
 
-  usersList.innerHTML =
-    "<div class='user-item'>Loading users...</div>";
+  if (stopUsersListener) {
+
+    stopUsersListener();
+
+  }
 
 
   const usersQuery =
@@ -359,76 +459,123 @@ async function loadUsers() {
     );
 
 
-  onSnapshot(
-    usersQuery,
-    (snapshot) => {
+  stopUsersListener =
+    onSnapshot(
+      usersQuery,
+      (snapshot) => {
 
-      usersList.innerHTML = "";
+        usersList.innerHTML = "";
 
-      let found = false;
-
-
-      snapshot.forEach((userDoc) => {
-
-        const data = userDoc.data();
+        let found = false;
 
 
-        if (data.uid === currentUser.uid) {
-          return;
+        snapshot.forEach((userDoc) => {
+
+          const data =
+            userDoc.data();
+
+
+          if (data.uid === currentUser.uid) {
+            return;
+          }
+
+
+          found = true;
+
+
+          const userDiv =
+            document.createElement("div");
+
+          userDiv.className =
+            "user-item";
+
+
+          const avatar =
+            document.createElement("div");
+
+          avatar.className =
+            "user-avatar";
+
+          avatar.innerText = "👤";
+
+
+          const nameBox =
+            document.createElement("div");
+
+          nameBox.className =
+            "user-name";
+
+
+          const name =
+            document.createElement("div");
+
+          name.innerText =
+            data.username || "User";
+
+
+          const status =
+            document.createElement("small");
+
+
+          if (data.online === true) {
+
+            status.innerText =
+              "🟢 Online";
+
+          } else {
+
+            status.innerText =
+              getLastSeenText(data.lastSeen);
+
+          }
+
+
+          nameBox.appendChild(name);
+
+          nameBox.appendChild(status);
+
+
+          userDiv.appendChild(avatar);
+
+          userDiv.appendChild(nameBox);
+
+
+          userDiv.onclick = function () {
+
+            selectUser({
+              uid: data.uid,
+              username: data.username || "User"
+            });
+
+          };
+
+
+          usersList.appendChild(userDiv);
+
+        });
+
+
+        if (!found) {
+
+          usersList.innerHTML =
+            "<div class='user-item'>No other users yet.</div>";
+
         }
 
+      },
 
-        found = true;
+      (error) => {
 
-
-        const userDiv =
-          document.createElement("div");
-
-        userDiv.className =
-          "user-item";
-
-
-        userDiv.innerHTML = `
-          <div class="user-avatar">👤</div>
-          <div class="user-name">
-            ${escapeHtml(data.username || "User")}
-          </div>
-        `;
-
-
-        userDiv.onclick = function () {
-
-          selectUser({
-            uid: data.uid,
-            username: data.username || "User"
-          });
-
-        };
-
-
-        usersList.appendChild(userDiv);
-
-      });
-
-
-      if (!found) {
+        console.error(
+          "Users listener error:",
+          error
+        );
 
         usersList.innerHTML =
-          "<div class='user-item'>No other users yet.</div>";
+          "<div class='user-item'>Unable to load users.</div>";
 
       }
-
-    },
-
-    (error) => {
-
-      console.error("Users error:", error);
-
-      usersList.innerHTML =
-        "<div class='user-item'>Unable to load users.</div>";
-
-    }
-  );
+    );
 
 }
 
@@ -493,7 +640,7 @@ function selectUser(user) {
   document
     .getElementById("onlineUser")
     .innerText =
-      "Private chat 🔐";
+      "Loading status...";
 
 
   document
@@ -502,7 +649,103 @@ function selectUser(user) {
       "Message " + user.username + "...";
 
 
+  listenForSelectedUserStatus();
+
   listenForPrivateMessages();
+
+}
+
+
+// ===============================
+// SELECTED USER STATUS
+// ===============================
+
+function listenForSelectedUserStatus() {
+
+  if (!selectedUser) return;
+
+
+  if (selectedUserStatusListener) {
+
+    selectedUserStatusListener();
+
+  }
+
+
+  const userRef =
+    doc(
+      db,
+      "Users",
+      selectedUser.uid
+    );
+
+
+  selectedUserStatusListener =
+    onSnapshot(
+      userRef,
+      (snapshot) => {
+
+        if (!snapshot.exists()) return;
+
+
+        const data =
+          snapshot.data();
+
+
+        if (data.online === true) {
+
+          document
+            .getElementById("onlineUser")
+            .innerText =
+              "🟢 Online";
+
+        } else {
+
+          document
+            .getElementById("onlineUser")
+            .innerText =
+              getLastSeenText(data.lastSeen);
+
+        }
+
+      }
+    );
+
+}
+
+
+// ===============================
+// LAST SEEN TEXT
+// ===============================
+
+function getLastSeenText(timestamp) {
+
+  if (!timestamp) {
+
+    return "Offline";
+
+  }
+
+
+  try {
+
+    const date =
+      timestamp.toDate();
+
+    const time =
+      date.toLocaleTimeString([], {
+        hour: "2-digit",
+        minute: "2-digit"
+      });
+
+
+    return "Last seen " + time;
+
+  } catch (error) {
+
+    return "Offline";
+
+  }
 
 }
 
@@ -531,6 +774,7 @@ window.sendMessage = async function () {
     alert("Please login first.");
 
     return;
+
   }
 
 
@@ -539,6 +783,7 @@ window.sendMessage = async function () {
     alert("Please select a user first.");
 
     return;
+
   }
 
 
@@ -569,11 +814,22 @@ window.sendMessage = async function () {
         "Messages"
       ),
       {
-        SenderId: currentUser.uid,
-        Sendername: currentUsername,
-        ReceiverId: selectedUser.uid,
-        Text: message,
-        Timestamp: serverTimestamp()
+
+        SenderId:
+          currentUser.uid,
+
+        Sendername:
+          currentUsername,
+
+        ReceiverId:
+          selectedUser.uid,
+
+        Text:
+          message,
+
+        Timestamp:
+          serverTimestamp()
+
       }
     );
 
@@ -606,6 +862,7 @@ function listenForPrivateMessages() {
   if (stopMessagesListener) {
 
     stopMessagesListener();
+
     stopMessagesListener = null;
 
   }
@@ -617,9 +874,9 @@ function listenForPrivateMessages() {
 
   chatBox.innerHTML =
     `<div class="message received">
-       <p>Private chat with ${escapeHtml(selectedUser.username)} 🔐</p>
-       <small>My Chat</small>
-     </div>`;
+      <p>Private chat with ${selectedUser.username} 🔐</p>
+      <small>My Chat</small>
+    </div>`;
 
 
   const chatId =
@@ -660,7 +917,8 @@ function listenForPrivateMessages() {
 
 
           const isMine =
-            data.SenderId === currentUser.uid;
+            data.SenderId ===
+            currentUser.uid;
 
 
           messageDiv.className =
@@ -702,6 +960,7 @@ function listenForPrivateMessages() {
 
 
           messageDiv.appendChild(p);
+
           messageDiv.appendChild(small);
 
           chatBox.appendChild(messageDiv);
@@ -723,22 +982,6 @@ function listenForPrivateMessages() {
 
       }
     );
-
-}
-
-
-// ===============================
-// ESCAPE HTML
-// ===============================
-
-function escapeHtml(text) {
-
-  const div =
-    document.createElement("div");
-
-  div.textContent = text;
-
-  return div.innerHTML;
 
 }
 
@@ -779,7 +1022,8 @@ function showAuthMessage(message) {
 
   document
     .getElementById("authMessage")
-    .innerText = message;
+    .innerText =
+      message;
 
 }
 
@@ -802,3 +1046,17 @@ document
 
     }
   );
+
+
+// ===============================
+// PAGE CLOSE / HIDE
+// ===============================
+
+window.addEventListener(
+  "beforeunload",
+  function () {
+
+    updateOfflineStatus();
+
+  }
+);
