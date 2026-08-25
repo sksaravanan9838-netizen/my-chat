@@ -9,10 +9,11 @@
 
 <body>
 
-  <!-- LOGIN SCREEN -->
+  <!-- LOGIN -->
   <section id="loginScreen" class="login-screen">
 
     <div class="login-card">
+
       <div class="logo">💬</div>
 
       <h1>My Chat</h1>
@@ -49,33 +50,59 @@
   </section>
 
 
-  <!-- CHAT SCREEN -->
+  <!-- CHAT APP -->
   <section id="chatScreen" class="app hidden">
 
+    <!-- HEADER -->
     <header class="header">
 
       <div class="profile">💬</div>
 
       <div class="user-info">
-        <h2>My Chat</h2>
+        <h2 id="chatTitle">My Chat</h2>
         <span id="onlineUser">Online</span>
       </div>
 
-      <button class="logout" onclick="logout()">Logout</button>
+      <button class="logout" onclick="logout()">
+        Logout
+      </button>
 
     </header>
 
 
+    <!-- USER SEARCH -->
+    <div class="user-search">
+
+      <input
+        type="text"
+        id="userSearchInput"
+        placeholder="Search username..."
+        autocomplete="off"
+      >
+
+      <button onclick="searchUsers()">
+        Search
+      </button>
+
+    </div>
+
+
+    <!-- USERS -->
+    <div id="usersList" class="users-list"></div>
+
+
+    <!-- CHAT -->
     <main id="chatBox" class="chat-box">
 
       <div class="message received">
-        <p>Welcome to My Chat! 👋</p>
-        <small>System</small>
+        <p>Select a user to start chatting 👋</p>
+        <small>My Chat</small>
       </div>
 
     </main>
 
 
+    <!-- MESSAGE INPUT -->
     <div class="input-area">
 
       <input
@@ -85,7 +112,9 @@
         autocomplete="off"
       >
 
-      <button onclick="sendMessage()">➤</button>
+      <button onclick="sendMessage()">
+        ➤
+      </button>
 
     </div>
 
