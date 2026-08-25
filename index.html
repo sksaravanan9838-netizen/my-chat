@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My Chat</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+  <!-- LOGIN SCREEN -->
+  <section id="loginScreen" class="login-screen">
+
+    <div class="login-card">
+      <div class="logo">💬</div>
+
+      <h1>My Chat</h1>
+      <p>Login to continue</p>
+
+      <input
+        type="email"
+        id="emailInput"
+        placeholder="Enter your email"
+        autocomplete="email"
+      >
+
+      <input
+        type="password"
+        id="passwordInput"
+        placeholder="Enter your password"
+        autocomplete="current-password"
+      >
+
+      <input
+        type="text"
+        id="usernameInput"
+        placeholder="Enter your username"
+        maxlength="20"
+      >
+
+      <button onclick="signup()">Create Account</button>
+      <button onclick="login()">Login</button>
+
+      <p id="authMessage"></p>
+
+    </div>
+
+  </section>
+
+
+  <!-- CHAT SCREEN -->
+  <section id="chatScreen" class="app hidden">
+
+    <header class="header">
+
+      <div class="profile">💬</div>
+
+      <div class="user-info">
+        <h2>My Chat</h2>
+        <span id="onlineUser">Online</span>
+      </div>
+
+      <button class="logout" onclick="logout()">Logout</button>
+
+    </header>
+
+
+    <main id="chatBox" class="chat-box">
+
+      <div class="message received">
+        <p>Welcome to My Chat! 👋</p>
+        <small>System</small>
+      </div>
+
+    </main>
+
+
+    <div class="input-area">
+
+      <input
+        type="text"
+        id="messageInput"
+        placeholder="Type a message..."
+        autocomplete="off"
+      >
+
+      <button onclick="sendMessage()">➤</button>
+
+    </div>
+
+  </section>
+
+
+  <!-- Firebase + App -->
+  <script type="module" src="script.js"></script>
+
+</body>
+</html>
