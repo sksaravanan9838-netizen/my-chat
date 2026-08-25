@@ -2,10 +2,13 @@
   "name": "My Chat",
   "short_name": "My Chat",
   "description": "Private real-time chat application",
+  "id": "/my-chat/",
   "start_url": "/my-chat/",
   "scope": "/my-chat/",
   "display": "standalone",
   "background_color": "#075e54",
   "theme_color": "#075e54",
-  "orientation": "portrait"
+  "orientation": "portrait",
+  "lang": "en",
+  "dir": "ltr"
 }
