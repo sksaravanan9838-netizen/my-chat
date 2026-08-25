@@ -4,83 +4,124 @@
   padding: 0;
 }
 
+html,
 body {
-  font-family: Arial, sans-serif;
-  background: #e9eef5;
-  height: 100vh;
+  width: 100%;
+  height: 100%;
 }
 
-/* LOGIN */
+body {
+  font-family: Arial, sans-serif;
+  background: #dfe5e9;
+  overflow: hidden;
+}
+
+
+/* =========================
+   LOGIN SCREEN
+========================= */
 
 .login-screen {
-  height: 100vh;
+  width: 100%;
+  height: 100dvh;
   display: flex;
   justify-content: center;
   align-items: center;
   padding: 20px;
-  background: #075e54;
+  background: linear-gradient(145deg, #075e54, #128c7e);
 }
 
 .login-card {
   width: 100%;
   max-width: 380px;
-  background: white;
+  background: rgba(255, 255, 255, 0.98);
   padding: 35px 25px;
-  border-radius: 20px;
+  border-radius: 24px;
   text-align: center;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.25);
 }
 
 .logo {
-  width: 75px;
-  height: 75px;
+  width: 78px;
+  height: 78px;
   margin: 0 auto 15px;
   border-radius: 50%;
   background: #075e54;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 38px;
+  font-size: 40px;
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.18);
 }
 
 .login-card h1 {
-  font-size: 28px;
-  margin-bottom: 8px;
+  font-size: 29px;
+  color: #222;
+  margin-bottom: 6px;
 }
 
 .login-card p {
   color: #777;
-  margin-bottom: 25px;
+  margin-bottom: 22px;
 }
 
 .login-card input {
   width: 100%;
-  padding: 14px;
+  padding: 14px 15px;
   border: 1px solid #ddd;
-  border-radius: 10px;
+  border-radius: 12px;
   outline: none;
   font-size: 16px;
-  margin-bottom: 15px;
+  margin-bottom: 13px;
+  background: #fafafa;
+  transition: 0.2s;
+}
+
+.login-card input:focus {
+  border-color: #128c7e;
+  background: white;
+  box-shadow: 0 0 0 3px rgba(18, 140, 126, 0.1);
 }
 
 .login-card button {
   width: 100%;
   padding: 14px;
+  margin-top: 5px;
   border: none;
-  border-radius: 10px;
+  border-radius: 12px;
   background: #075e54;
   color: white;
   font-size: 16px;
+  font-weight: bold;
   cursor: pointer;
+  transition: 0.2s;
+}
+
+.login-card button:hover {
+  background: #064e47;
+}
+
+.login-card button:active {
+  transform: scale(0.98);
+}
+
+#authMessage {
+  min-height: 20px;
+  margin-top: 14px;
+  margin-bottom: 0;
+  color: #d32f2f;
+  font-size: 14px;
 }
 
 
-/* CHAT APP */
+/* =========================
+   CHAT APP
+========================= */
 
 .app {
   width: 100%;
-  max-width: 500px;
-  height: 100vh;
+  max-width: 600px;
+  height: 100dvh;
   margin: auto;
   background: white;
   display: flex;
@@ -92,77 +133,110 @@ body {
 }
 
 
-/* HEADER */
+/* =========================
+   HEADER
+========================= */
 
 .header {
-  height: 70px;
+  min-height: 70px;
   background: #075e54;
   color: white;
   display: flex;
   align-items: center;
   padding: 10px 12px;
   gap: 12px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
+  z-index: 5;
 }
 
 .profile {
-  width: 45px;
-  height: 45px;
+  width: 46px;
+  height: 46px;
+  min-width: 46px;
   border-radius: 50%;
   background: white;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 24px;
+  font-size: 25px;
 }
 
 .user-info {
   flex: 1;
+  min-width: 0;
 }
 
 .user-info h2 {
   font-size: 19px;
+  font-weight: 600;
 }
 
 .user-info span {
+  display: block;
+  margin-top: 2px;
   font-size: 12px;
   color: #d7ffd8;
 }
 
 .logout {
   border: none;
-  background: rgba(255,255,255,0.15);
+  background: rgba(255, 255, 255, 0.16);
   color: white;
-  padding: 8px 10px;
-  border-radius: 8px;
+  padding: 9px 11px;
+  border-radius: 9px;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.logout:active {
+  transform: scale(0.96);
 }
 
 
-/* CHAT */
+/* =========================
+   CHAT AREA
+========================= */
 
 .chat-box {
   flex: 1;
-  padding: 15px;
+  padding: 16px 12px;
   overflow-y: auto;
-  background: #efeae2;
+  background:
+    radial-gradient(
+      rgba(0, 0, 0, 0.035) 1px,
+      transparent 1px
+    );
+  background-size: 18px 18px;
+  background-color: #efeae2;
+  scroll-behavior: smooth;
 }
 
 .message {
-  max-width: 75%;
-  padding: 10px 12px;
-  margin-bottom: 10px;
-  border-radius: 10px;
+  position: relative;
+  max-width: 78%;
+  padding: 9px 11px 7px;
+  margin-bottom: 9px;
+  border-radius: 12px;
   font-size: 15px;
+  line-height: 1.4;
   word-wrap: break-word;
+  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.08);
 }
 
 .received {
   background: white;
   margin-right: auto;
+  border-top-left-radius: 4px;
 }
 
 .sent {
   background: #d9fdd3;
   margin-left: auto;
+  border-top-right-radius: 4px;
+}
+
+.message p {
+  margin: 0;
 }
 
 .message small {
@@ -174,31 +248,82 @@ body {
 }
 
 
-/* INPUT */
+/* =========================
+   MESSAGE INPUT
+========================= */
 
 .input-area {
   display: flex;
-  padding: 10px;
+  align-items: center;
+  padding: 9px 10px;
   gap: 8px;
-  background: #f5f5f5;
+  background: #f0f2f5;
+  border-top: 1px solid #ddd;
 }
 
 .input-area input {
   flex: 1;
+  min-width: 0;
   border: none;
   outline: none;
   background: white;
   border-radius: 25px;
-  padding: 13px 16px;
+  padding: 13px 17px;
   font-size: 15px;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.08);
 }
 
 .input-area button {
   width: 48px;
   height: 48px;
+  min-width: 48px;
   border: none;
   border-radius: 50%;
   background: #075e54;
   color: white;
-  font-size: 22px;
+  font-size: 21px;
+  cursor: pointer;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.18);
 }
+
+.input-area button:active {
+  transform: scale(0.92);
+}
+
+
+/* =========================
+   MOBILE
+========================= */
+
+@media (max-width: 600px) {
+
+  .app {
+    max-width: none;
+  }
+
+  .header {
+    min-height: 64px;
+  }
+
+  .chat-box {
+    padding: 14px 9px;
+  }
+
+  .message {
+    max-width: 84%;
+  }
+
+}
+
+
+/* =========================
+   DESKTOP
+========================= */
+
+@media (min-width: 601px) {
+
+  .app {
+    box-shadow: 0 0 25px rgba(0, 0, 0, 0.15);
+  }
+
+  }
