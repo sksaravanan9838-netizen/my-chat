@@ -1,7 +1,9 @@
 {
   "name": "My Chat",
   "short_name": "My Chat",
-  "start_url": "./",
+  "description": "Private real-time chat application",
+  "start_url": "/my-chat/",
+  "scope": "/my-chat/",
   "display": "standalone",
   "background_color": "#075e54",
   "theme_color": "#075e54",
