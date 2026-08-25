@@ -1,23 +1,56 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
+
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
+
   <title>My Chat</title>
+
   <link rel="stylesheet" href="style.css">
+
+  <!-- PWA -->
+  <link rel="manifest" href="manifest.json">
+
+  <meta
+    name="theme-color"
+    content="#075e54"
+  >
+
 </head>
+
 
 <body>
 
+
   <!-- LOGIN -->
-  <section id="loginScreen" class="login-screen">
+
+  <section
+    id="loginScreen"
+    class="login-screen"
+  >
 
     <div class="login-card">
 
-      <div class="logo">💬</div>
+      <div class="logo">
+        💬
+      </div>
 
-      <h1>My Chat</h1>
-      <p>Login to continue</p>
+
+      <h1>
+        My Chat
+      </h1>
+
+
+      <p>
+        Login to continue
+      </p>
+
 
       <input
         type="email"
@@ -26,12 +59,14 @@
         autocomplete="email"
       >
 
+
       <input
         type="password"
         id="passwordInput"
         placeholder="Enter your password"
         autocomplete="current-password"
       >
+
 
       <input
         type="text"
@@ -40,8 +75,16 @@
         maxlength="20"
       >
 
-      <button onclick="signup()">Create Account</button>
-      <button onclick="login()">Login</button>
+
+      <button onclick="signup()">
+        Create Account
+      </button>
+
+
+      <button onclick="login()">
+        Login
+      </button>
+
 
       <p id="authMessage"></p>
 
@@ -50,27 +93,51 @@
   </section>
 
 
+
   <!-- CHAT APP -->
-  <section id="chatScreen" class="app hidden">
+
+  <section
+    id="chatScreen"
+    class="app hidden"
+  >
+
 
     <!-- HEADER -->
+
     <header class="header">
 
-      <div class="profile">💬</div>
-
-      <div class="user-info">
-        <h2 id="chatTitle">My Chat</h2>
-        <span id="onlineUser">Online</span>
+      <div class="profile">
+        💬
       </div>
 
-      <button class="logout" onclick="logout()">
+
+      <div class="user-info">
+
+        <h2 id="chatTitle">
+          My Chat
+        </h2>
+
+
+        <span id="onlineUser">
+          Online
+        </span>
+
+      </div>
+
+
+      <button
+        class="logout"
+        onclick="logout()"
+      >
         Logout
       </button>
 
     </header>
 
 
+
     <!-- USER SEARCH -->
+
     <div class="user-search">
 
       <input
@@ -80,6 +147,7 @@
         autocomplete="off"
       >
 
+
       <button onclick="searchUsers()">
         Search
       </button>
@@ -87,22 +155,38 @@
     </div>
 
 
+
     <!-- USERS -->
+
     <div id="usersList" class="users-list"></div>
 
 
+
     <!-- CHAT -->
-    <main id="chatBox" class="chat-box">
+
+    <main
+      id="chatBox"
+      class="chat-box"
+    >
 
       <div class="message received">
-        <p>Select a user to start chatting 👋</p>
-        <small>My Chat</small>
+
+        <p>
+          Select a user to start chatting 👋
+        </p>
+
+        <small>
+          My Chat
+        </small>
+
       </div>
 
     </main>
 
 
+
     <!-- MESSAGE INPUT -->
+
     <div class="input-area">
 
       <input
@@ -112,17 +196,26 @@
         autocomplete="off"
       >
 
+
       <button onclick="sendMessage()">
         ➤
       </button>
 
     </div>
 
+
   </section>
 
 
+
   <!-- Firebase + App -->
-  <script type="module" src="script.js"></script>
+
+  <script
+    type="module"
+    src="script.js"
+  ></script>
+
 
 </body>
+
 </html>
