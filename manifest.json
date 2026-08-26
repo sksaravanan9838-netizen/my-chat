@@ -10,5 +10,19 @@
   "theme_color": "#075e54",
   "orientation": "portrait",
   "lang": "en",
-  "dir": "ltr"
+  "dir": "ltr",
+  "icons": [
+    {
+      "src": "/my-chat/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/my-chat/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
 }
